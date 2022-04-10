@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Adapter
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
@@ -28,6 +29,11 @@ class MainActivity : AppCompatActivity(){
         "Urađene ankete",
         "Buduće ankete",
         "Prošle ankete")
+
+    override fun onResume() {
+        super.onResume()
+        anketaAdapter.updateAnketa(anketaViewModel.getMyAnkete())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +64,7 @@ class MainActivity : AppCompatActivity(){
                     }
                 }
             }
+
 
             override fun onNothingSelected(parent : AdapterView<*>?) {
 

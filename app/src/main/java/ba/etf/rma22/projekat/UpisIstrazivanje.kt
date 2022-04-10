@@ -24,9 +24,11 @@ class UpisIstrazivanje : AppCompatActivity() {
     private lateinit var spinnerG : Spinner;
     private lateinit var spinnerI : Spinner;
     private lateinit var button : Button;
+
         override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.istrazivanje)
+
 
             var tacno : Boolean = false
             var tacno1 : Boolean = false
@@ -340,6 +342,7 @@ class UpisIstrazivanje : AppCompatActivity() {
 
                 button.setOnClickListener {
                     korisnik.godinaStudiranja= spinnerGod.selectedItem.toString().toInt()
+
                     korisnikViewModel.upisiKorisnika(
                         spinnerG.selectedItem.toString(),
                         spinnerI.selectedItem.toString(),
