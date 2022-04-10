@@ -37,7 +37,7 @@ class UpisIstrazivanje : AppCompatActivity() {
             spinnerI=findViewById(R.id.odabirIstrazivanja)
             button=findViewById(R.id.dodajIstrazivanjeDugme)
             val god:Array<String> = arrayOf(
-               "Odaberi Godinu",
+                " ",
                 "1",
                 "2",
                 "3",
@@ -47,12 +47,21 @@ class UpisIstrazivanje : AppCompatActivity() {
            button.isEnabled = false
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerGod.setAdapter(adapter);
+            spinnerGod.setSelection(korisnik.godinaStudiranja)
             spinnerGod.onItemSelectedListener=object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     tacno=true
 
                      if(parent!=null){
                          if(position==0){
+                             var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
+                                 mutableListOf<String>())
+                             arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                             spinnerI.adapter=arr1
+                             var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
+                             arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                             spinnerG.adapter=arr2
+                             button.isEnabled=false
 
                          }
                          else if(position==1) {
@@ -330,6 +339,7 @@ class UpisIstrazivanje : AppCompatActivity() {
             }
 
                 button.setOnClickListener {
+                    korisnik.godinaStudiranja= spinnerGod.selectedItem.toString().toInt()
                     korisnikViewModel.upisiKorisnika(
                         spinnerG.selectedItem.toString(),
                         spinnerI.selectedItem.toString(),

@@ -4,5 +4,5 @@ data class Korisnik(
         var listaAnketa: MutableList<Anketa>,
         var listaGrupa: MutableList<Grupa>,
         var listaIstrazivanje: MutableList<Istrazivanje>,
-        var godinaStudiranja: Int
+        var godinaStudiranja: Int =0
         )
