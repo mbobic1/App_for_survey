@@ -15,6 +15,7 @@ import java.util.*
 class AnketaListAdapter(
     var ankete: List<Anketa>
 ) : RecyclerView.Adapter<AnketaListAdapter.AnketaViewHolder>() {
+
     var ispisFormat =  SimpleDateFormat("dd.MM.yyyy.")
 
 
@@ -42,6 +43,9 @@ class AnketaListAdapter(
         val anketa: Anketa =ankete.get(position);
         val trenutniDatum : Date=Calendar.getInstance().run{ time };
         var id: Int=0;
+        holder.itemView.setOnClickListener{
+
+        }
         holder.anketaName.text=anketa.naziv;
         holder.anketaProgress.progress=prog(ankete[position].progres)
         holder.anketaIstrazivanje.text=ankete[position].nazivIstrazivanja;

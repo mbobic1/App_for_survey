@@ -27,6 +27,7 @@ class PocetniTest {
     @get:Rule
     val intentsTestRule = ActivityScenarioRule<MainActivity>(MainActivity::class.java)
 
+
     @Test
     fun postojiSveNaPocetnoj() {
 
