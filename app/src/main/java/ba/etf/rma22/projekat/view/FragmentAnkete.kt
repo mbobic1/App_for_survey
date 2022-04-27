@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.UpisIstrazivanje
 import ba.etf.rma22.projekat.ankete
@@ -44,7 +45,7 @@ class FragmentAnketa : Fragment() {
         var view = inflater.inflate(R.layout.activity_main, container, false)
         listaAnketa = view.findViewById(R.id.listaAnketa)
         listaAnketa.layoutManager = GridLayoutManager(activity, 2)
-        anketaAdapter = AnketaListAdapter(arrayListOf())
+        anketaAdapter = AnketaListAdapter(arrayListOf(), activity as MainActivity)
         listaAnketa.adapter=anketaAdapter
         anketaAdapter.updateAnketa(ankete())
 
@@ -78,12 +79,6 @@ class FragmentAnketa : Fragment() {
 
             }
         }
-
-
-        var duzina = pitanjeViewModel.getVelicinu()
-        val fragments = mutableListOf<Fragment>()
-
-
 
         return view;
     }

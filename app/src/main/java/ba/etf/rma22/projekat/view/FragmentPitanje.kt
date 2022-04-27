@@ -9,10 +9,11 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
+import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Pitanje
 
 
-class FragmentPitanje(var pitanje : Pitanje) : Fragment() {
+class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
     lateinit var listView: ListView
     lateinit var textView: TextView
     lateinit var button: Button
@@ -26,9 +27,9 @@ class FragmentPitanje(var pitanje : Pitanje) : Fragment() {
         textView=view.findViewById(R.id.tekstPitanja)
         listView=view.findViewById(R.id.odgovoriLista)
         button=view.findViewById(R.id.dugmeZaustavi)
-        textView.setText(pitanje.naziv)
+        textView.setText(pitanje.tekst)
 
-        val list = pitanje.opcije.toMutableList();
+        val list = pitanje.opcije.toMutableList()
         val adapter = ArrayAdapter<String>(
             view.context,
             android.R.layout.simple_list_item_1,list
@@ -40,6 +41,7 @@ class FragmentPitanje(var pitanje : Pitanje) : Fragment() {
         })
 
         button.setOnClickListener{
+            (activity as MainActivity).zaZaustavi()
 
         }
 

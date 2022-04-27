@@ -349,6 +349,7 @@ class FragmentIstrazivanje : Fragment() {
             MainActivity.korisnik.godinaStudiranja= spinnerGod.selectedItem.toString().toInt()
             MainActivity.stringGru=spinnerG.selectedItem.toString()
             MainActivity.stringIstra=spinnerI.selectedItem.toString()
+            MainActivity.godina=spinnerGod.selectedItem.toString().toInt()
 
             korisnikViewModel.upisiKorisnika(
                 spinnerG.selectedItem.toString(),
@@ -356,10 +357,16 @@ class FragmentIstrazivanje : Fragment() {
                 spinnerGod.selectedItem.toString().toInt()
             )
 
-            (activity as MainActivity).refreshSecondFragmentText()  
+            (activity as MainActivity).refreshSecondFragmentText()
         }
 
         return view;
+    }
+    companion object{
+        fun newInstance() : FragmentIstrazivanje{
+            var novi = FragmentIstrazivanje()
+            return novi
+        }
     }
 
 }
