@@ -11,13 +11,17 @@ import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.Sacuvaj
+import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
+import java.util.*
 
 
 class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
+    var pitanje1 = pitanje
     lateinit var listView: ListView
     lateinit var textView: TextView
     lateinit var button: Button
-
+    val trenutniDatum : Date = Calendar.getInstance().run{ time };
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -28,21 +32,30 @@ class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
         listView=view.findViewById(R.id.odgovoriLista)
         button=view.findViewById(R.id.dugmeZaustavi)
         textView.setText(pitanje.tekst)
-
         val list = pitanje.opcije.toMutableList()
         val adapter = ArrayAdapter<String>(
             view.context,
             android.R.layout.simple_list_item_1,list
         )
         listView.adapter=adapter
-        listView.setOnItemClickListener(AdapterView.OnItemClickListener{
-            parent,view, position, id->
-            (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
-        })
+        if(MainActivity.sacuvaj.anketa.progres.compareTo(1.0)!=0 && MainActivity.sacuvaj.anketa.datumKraj>trenutniDatum) {
+            listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
+                (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
+                var odg = mutableListOf<Sacuvaj>()
+                odg.addAll(MainActivity.sacuvajLista)
+                var odg1 = odg.map { t -> t.anketa }
+                MainActivity.sacuvaj.odovori[odg1.indexOf(MainActivity.anketa)].add(position)
+            })
 
-        button.setOnClickListener{
-            (activity as MainActivity).zaZaustavi()
+            button.setOnClickListener {
+                var odg = mutableListOf<Sacuvaj>()
+                odg.addAll(MainActivity.sacuvajLista)
+                var odg1 = odg.map { t -> t.anketa }
+                MainActivity.sacuvaj.jelPritisnuto = false
+                MainActivity.sacuvajLista[odg1.indexOf(MainActivity.anketa)] = MainActivity.sacuvaj
+                (activity as MainActivity).zaZaustavi()
 
+            }
         }
 
 

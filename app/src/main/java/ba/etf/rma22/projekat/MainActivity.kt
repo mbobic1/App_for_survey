@@ -7,12 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import ba.etf.rma22.projekat.data.models.Korisnik
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Grupa
-import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.*
 import ba.etf.rma22.projekat.view.*
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,13 +18,16 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(){
     companion object{
+        var anketa : Anketa = Anketa("", "", Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0f)
+        var sacuvaj: Sacuvaj = Sacuvaj(anketa, mutableListOf(), 0, false)
+        var sacuvajLista : MutableList<Sacuvaj> = mutableListOf()
         var korisnik : Korisnik = Korisnik(mutableListOf(), mutableListOf(), mutableListOf(),0)
         var stringGru : String = ""
         var stringIstra : String = ""
         var godina : Int = 0
         var predaj : Int = 0
-        var anketa : Anketa = Anketa("", "", Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0f)
-    }
+
+     }
     private lateinit var viewPager : ViewPager2
 
 
@@ -38,6 +38,11 @@ class MainActivity : AppCompatActivity(){
             if(position==0){
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewPagerAdapter.vratiIstrazivanje() }, 500)
+            }
+            else if(position==viewPagerAdapter.fragments.size-1){
+                if(viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] is FragmentPredaj){
+                    (viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] as FragmentPredaj).postavi()
+                }
             }
         }
     }

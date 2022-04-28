@@ -5,7 +5,20 @@ import ba.etf.rma22.projekat.data.models.Pitanje
 fun pitanja() : List<Pitanje>{
     return listOf(
         Pitanje("pitanje 1", "Sta je ovo", listOf("kuca", "auto", "zgrada")),
+        Pitanje("pitanje 1", "kako ovo", listOf("tu", "tamo", "zgrada", "lopta")),
+        Pitanje("pitanje 1", "WAS", listOf("kula", "buba", "pas")),
         Pitanje("pitanje 2", "Sta radis", listOf("lezim", "spavam", "odmaram")),
-        Pitanje("pitanje 3", "Gdje si", listOf("kuca", "plaza", "skola"))
+        Pitanje("pitanje 2", "KReni to", listOf("lezim", "spavam", "odmaram")),
+        Pitanje("pitanje 2", "Presadafsfsa", listOf("lezim", "spavam", "odmaram")),
+        Pitanje("pitanje 3", "Gdje si", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 3", "safgasfwfsaf", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 3", "otisao je gdje: ", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 4", "Gdje si", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 4", "safgasfwfsaf", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 4", "otisao je gdje: ", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 5", "Gdje si", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 5", "safgasfwfsaf", listOf("kuca", "plaza", "skola")),
+        Pitanje("pitanje 5", "otisao je gdje: ", listOf("kuca", "plaza", "skola"))
+
     )
 }

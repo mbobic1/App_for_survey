@@ -16,6 +16,9 @@ import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.models.Sacuvaj
+import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
+import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,13 +26,12 @@ import java.util.*
 class AnketaListAdapter(
     var ankete: List<Anketa>, activity: MainActivity
 ) : RecyclerView.Adapter<AnketaListAdapter.AnketaViewHolder>() {
-    private lateinit var viewPagerAdapter : ViewPagerAdapter
 
-    private lateinit var pitanje: Pitanje
 
     val activity : MainActivity = activity
 
     var ispisFormat =  SimpleDateFormat("dd.MM.yyyy.")
+    private var anketaViewModel : AnketaViewModel = AnketaViewModel()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnketaViewHolder {
@@ -55,18 +57,22 @@ class AnketaListAdapter(
 
 
     override fun onBindViewHolder(holder: AnketaViewHolder, position: Int) {
-        val anketa: Anketa =ankete.get(position);
+        val anketa: Anketa =ankete.get(position)
         val trenutniDatum : Date=Calendar.getInstance().run{ time };
         var id: Int=0;
-        holder.itemView.setOnClickListener{
-            //ovo je klik za anketu
-            MainActivity.anketa=anketa
-            onItemClick()
-        }
         holder.anketaName.text=anketa.naziv;
         holder.anketaProgress.progress=prog(ankete[position].progres)
         holder.anketaIstrazivanje.text=ankete[position].nazivIstrazivanja;
-        if(trenutniDatum<ankete[position].datumPocetak){
+        var odg = mutableListOf<Sacuvaj>()
+        odg.addAll(MainActivity.sacuvajLista)
+        var odg1=odg.map{ t-> t.anketa}
+
+        if(odg1.indexOf(ankete[position])>-1 && MainActivity.sacuvajLista[odg1.indexOf(ankete[position])].jelPritisnuto && ankete[position]==MainActivity.anketa){
+            holder.anketaDatum.text="Anketa urađena: "+ ispisFormat.format(ankete[position].datumKraj)
+            holder.anketaSlika.setImageResource(R.drawable.plava);
+            MainActivity.sacuvaj.anketa=ankete[position]
+        }
+        else if(trenutniDatum<ankete[position].datumPocetak){
             holder.anketaDatum.text="Vrijeme aktiviranja: "+ ispisFormat.format(ankete[position].datumPocetak)
             holder.anketaSlika.setImageResource(R.drawable.zuta);
         }
@@ -83,20 +89,42 @@ class AnketaListAdapter(
             holder.anketaSlika.setImageResource(R.drawable.crvena)
         }
 
+        if(!(trenutniDatum<ankete[position].datumPocetak) && anketaViewModel.getMyAnkete().contains(ankete[position])) {
+            holder.itemView.setOnClickListener {
+
+                MainActivity.sacuvaj.anketa = ankete[position]
+                MainActivity.anketa = ankete[position]
+                if (MainActivity.sacuvaj.jelPritisnuto) {
+                    holder.anketaSlika.setImageResource(R.drawable.plava)
+                }
+                var pitanja = PitanjeAnketaViewModel().getPitanja(
+                    MainActivity.anketa.naziv,
+                    MainActivity.anketa.nazivIstrazivanja
+                )
+                var odg = mutableListOf<Sacuvaj>()
+                odg.addAll(MainActivity.sacuvajLista)
+                var odg1 = odg.map { t -> t.anketa }
+                if (odg1.contains(anketa)) {
+
+                    MainActivity.sacuvaj = MainActivity.sacuvajLista[odg1.indexOf(anketa)]
+
+                } else {
+
+                    MainActivity.sacuvaj.jelPritisnuto = false
+                    MainActivity.sacuvaj.odovori.clear()
+                    for (i in 1..pitanja.size) {
+                        MainActivity.sacuvaj.odovori.add(mutableListOf())
+                    }
+                    MainActivity.sacuvajLista.add(MainActivity.sacuvaj)
+                }
+                onItemClick()
+            }
+        }
+
 
     }
 
     private fun onItemClick() {
-        /*activity?.let{
-            val intent = Intent (it, MainActivity::class.java)
-            it.startActivity(intent)
-        }*/
-        /*val fragment: Fragment = FragmentPitanje(pitanje)
-        val fragmentManager: FragmentManager = activity.getSupportFragmentManager()
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.listaAnketa, fragment)
-        fragmentTransaction.addToBackStack(null)
-        fragmentTransaction.commit()*/
         (activity as MainActivity).refreshAnketaFragmentPitanje()
     }
 

@@ -24,8 +24,10 @@ class ViewPagerAdapter(
         notifyItemChanged(index)
     }
     fun vratiIstrazivanje(){
-        if(fragments[1] is FragmentPoruka)
+
+        if(fragments.size>1 && fragments[1] is FragmentPoruka)
         {
+
             fragments[1]=FragmentIstrazivanje.newInstance()
             notifyItemChanged(1)
 
@@ -36,6 +38,8 @@ class ViewPagerAdapter(
         fragments.add(FragmentAnketa())
         fragments.add(FragmentPoruka.newInstance(MainActivity.anketa.naziv, MainActivity.anketa.nazivIstrazivanja, MainActivity.predaj))
         notifyItemChanged(1)
+        println("snkrs34343434343434=${MainActivity.sacuvaj.anketa.naziv}   =${MainActivity.sacuvajLista.size} =${MainActivity.sacuvajLista[0].anketa.naziv}")
+
     }
     fun dugmeZaustavi(){
         fragments.clear()
