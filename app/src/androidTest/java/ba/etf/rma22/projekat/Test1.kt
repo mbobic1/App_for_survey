@@ -1,4 +1,4 @@
-package ba.etf.rma22.projekat
+/*package ba.etf.rma22.projekat
 
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
@@ -77,6 +77,4 @@ class Test1 {
 
         Espresso.onView(withId(R.id.dodajIstrazivanjeDugme)).perform(ViewActions.click())
         Assert.assertEquals(2,AnketaRepository.getMyAnkete().size)
-    }
-
-}
+ )*/

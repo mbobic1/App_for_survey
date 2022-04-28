@@ -8,7 +8,7 @@ import ba.etf.rma22.projekat.data.pitanja
 import ba.etf.rma22.projekat.data.pitanjeAnketa
 import ba.etf.rma22.projekat.data.repositories.PitanjeRepository.Companion.getAllPitanja
 
-class PitanjaAnketaRepository {
+class PitanjeAnketaRepository {
     companion object{
         private var pitanja : List<Pitanje> = pitanja()
         init {

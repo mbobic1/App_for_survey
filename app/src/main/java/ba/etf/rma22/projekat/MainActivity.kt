@@ -41,7 +41,8 @@ class MainActivity : AppCompatActivity(){
             }
             else if(position==viewPagerAdapter.fragments.size-1){
                 if(viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] is FragmentPredaj){
-                    (viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] as FragmentPredaj).postavi()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        (viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] as FragmentPredaj).postavi()},500)
                 }
             }
         }
