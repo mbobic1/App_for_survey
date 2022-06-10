@@ -1,6 +1,5 @@
 package ba.etf.rma22.projekat
 
-
 import ba.etf.rma22.projekat.data.models.*
 import ba.etf.rma22.projekat.data.repositories.*
 
@@ -85,8 +84,7 @@ class RepositoryUnitTest {
 
     @Test
     fun a6_zapocniNemogucuAnketu() = runBlocking {
-        var k = TakeAnketaRepository.zapocniAnketu(999)
-        println(k.id)
+        TakeAnketaRepository.zapocniAnketu(999)
         assertThat(TakeAnketaRepository.getPoceteAnkete()!!.size,CoreMatchers.equalTo(1))
     }
 

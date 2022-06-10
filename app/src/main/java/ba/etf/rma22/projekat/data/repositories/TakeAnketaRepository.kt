@@ -22,4 +22,12 @@ object TakeAnketaRepository {
         }
 
     }
+
+    suspend fun getPoceteAnketeV2():List<AnketaTaken>?{
+        return withContext(Dispatchers.IO){
+            var pokusaji = ApiAdapter.retrofit.getPokusajeZaStudenta(AccountRepository.getHash())
+            return@withContext pokusaji;
+        }
+
+    }
 }

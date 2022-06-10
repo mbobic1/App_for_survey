@@ -18,6 +18,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(){
     companion object{
+        var prog : Int = 0;
         var anketa : Anketa = Anketa(0, "", "",Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0f, "")
         var sacuvaj: Sacuvaj = Sacuvaj(anketa, mutableListOf(), 0, false)
         var sacuvajLista : MutableList<Sacuvaj> = mutableListOf()

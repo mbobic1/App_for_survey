@@ -2,6 +2,7 @@ package ba.etf.rma22.projekat.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,7 +39,7 @@ class FragmentAnketa : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        anketaViewModel.getMyAnkete(onSuccess = ::update, onError = ::onError)
+                 anketaViewModel.getMyAnkete(onSuccess = ::update, onError = ::onError)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -48,7 +49,6 @@ class FragmentAnketa : Fragment() {
         anketaAdapter = AnketaListAdapter(arrayListOf(), activity as MainActivity)
         listaAnketa.adapter=anketaAdapter
         anketaViewModel.getMyAnkete(onSuccess = ::update, onError = ::onError)
-
 
         var spinner: Spinner;
         var adapter= ArrayAdapter(view.context, android.R.layout.simple_spinner_item,podatci)

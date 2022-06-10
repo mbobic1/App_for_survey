@@ -26,9 +26,10 @@ class FragmentPredaj : Fragment() {
           textView = view.findViewById(R.id.progresTekst)
           button = view.findViewById(R.id.dugmePredaj)
 
+         textView.setText("${MainActivity.prog}%")
 
          button.setOnClickListener{ ;
-IstrazivanjeIGrupaViewModel().gon(MainActivity.anketa.id, onSucces = ::moj, onError = ::onError)
+                IstrazivanjeIGrupaViewModel().gon(MainActivity.anketa.id, onSucces = ::moj, onError = ::onError)
           }
           return view
      }
@@ -40,10 +41,6 @@ fun moj(a:String)
     {
 
     }
-     fun postavi(i:Int) {
 
-     textView.setText("${i}%")
-      //   MainActivity.sacuvajLista.add(MainActivity.sacuvaj)
-     }
 }
 

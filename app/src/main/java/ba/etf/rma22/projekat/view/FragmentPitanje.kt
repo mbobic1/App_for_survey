@@ -10,17 +10,18 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
-import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Pitanje
-import ba.etf.rma22.projekat.data.models.Sacuvaj
+import ba.etf.rma22.projekat.data.models.*
+import ba.etf.rma22.projekat.viewmodel.OdgovorViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import java.util.*
 
 
-class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
+class FragmentPitanje(var pitanje: Pitanje, var odg1 : Int, anketaTaken1: AnketaTaken) : Fragment() {
     lateinit var listView: ListView
     lateinit var textView: TextView
+    var anketaTaken12 = anketaTaken1
     lateinit var button: Button
+    var odgovorPitanje : OdgovorViewModel = OdgovorViewModel()
     val trenutniDatum : Date = Calendar.getInstance().run{ time };
 
     override fun onCreateView(
@@ -39,27 +40,27 @@ class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
             android.R.layout.simple_list_item_1,list
         )
         listView.adapter=adapter
-        if(MainActivity.sacuvaj.anketa.progres.compareTo(1.0)!=0 && MainActivity.sacuvaj.anketa.datumKraj!=null&&MainActivity.sacuvaj.anketa.datumKraj>trenutniDatum) {
+        if(MainActivity.anketa.progres.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj<trenutniDatum) && MainActivity.anketa.datumPocetak<=trenutniDatum) {
             listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
+
                 (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
-                var odg = mutableListOf<Sacuvaj>()
-                odg.addAll(MainActivity.sacuvajLista)
-                var odg1 = odg.map { t -> t.anketa }
-                MainActivity.sacuvaj.odovori[odg1.indexOf(MainActivity.anketa)].add(position)
+                odgovorPitanje.dodajOdg(anketaTaken12,position, pitanje.id, onSucces = ::vrati)
+
             })
 
             button.setOnClickListener {
                 var odg = mutableListOf<Sacuvaj>()
                 odg.addAll(MainActivity.sacuvajLista)
-                var odg1 = odg.map { t -> t.anketa }
                 MainActivity.sacuvaj.jelPritisnuto = false
-                MainActivity.sacuvajLista[odg1.indexOf(MainActivity.anketa)] = MainActivity.sacuvaj
                 (activity as MainActivity).zaZaustavi()
 
             }
         }
 
-
         return view
+    }
+
+    fun  vrati(progres : Int){
+        MainActivity.prog=progres
     }
 }

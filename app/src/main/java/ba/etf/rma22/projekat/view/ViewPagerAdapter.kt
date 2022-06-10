@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import ba.etf.rma22.projekat.MainActivity
+import ba.etf.rma22.projekat.data.models.AnketaTaken
+import ba.etf.rma22.projekat.data.models.Odgovor
 import ba.etf.rma22.projekat.data.models.Pitanje
 import ba.etf.rma22.projekat.data.repositories.IstrazivanjeIGrupaRepository
 import ba.etf.rma22.projekat.data.repositories.PitanjeRepository
@@ -50,21 +52,22 @@ class ViewPagerAdapter(
         notifyDataSetChanged()
     }
     fun dajPitanja(){
-        PitanjeAnketaViewModel().getPitanja(MainActivity.anketa.id, onSucces = ::oe, onError = ::onError)
+        PitanjeAnketaViewModel().getPitanjaV2(MainActivity.anketa.id, onSucces = ::oe, onError = ::onError)
        }
-fun oe(a:List<Pitanje>)
-{
-    println("U dunkcijgvif fvohveghgvvgubyuby")
-    fragments.clear()
-   for( i in a){
-        fragments.add(FragmentPitanje(i))
-
-    }
+    fun oe(a:List<Pitanje>, odg : List<Odgovor>, anketaTaken: AnketaTaken)
+    {
+        fragments.clear()
+        for( i in a){
+            if(odg.map{it->it.PitanjeId}.contains(i.id))
+            fragments.add(FragmentPitanje(i, odg.last { it->it.PitanjeId==i.id }.odgovoreno,anketaTaken))
+            else
+                fragments.add(FragmentPitanje(i, -1,anketaTaken))
+        }
     fragments.add(FragmentPredaj())
     notifyDataSetChanged()
     (activity as MainActivity).evo()
 
-}
+    }
 fun onError()
 {
 

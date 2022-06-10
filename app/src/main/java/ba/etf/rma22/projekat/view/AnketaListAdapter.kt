@@ -106,46 +106,9 @@ class AnketaListAdapter(
 
         anketaViewModel.getMyAnketeV2(onSuccess = ::clickBait, onError = ::onError, trenutniDatum, holder, position, anketa)
 
-        /*if(!(trenutniDatum<ankete[position].datumPocetak) && anketaViewModel.getMyAnkete().contains(ankete[position])) {
-            holder.itemView.setOnClickListener {
-
-                MainActivity.sacuvaj.anketa = ankete[position]
-                MainActivity.anketa = ankete[position]
-                if (MainActivity.sacuvaj.jelPritisnuto) {
-                    holder.anketaSlika.setImageResource(R.drawable.plava)
-                }
-                var pitanja = PitanjeAnketaViewModel().getPitanja(
-                    MainActivity.anketa.naziv,
-                    MainActivity.anketa.nazivIstrazivanja
-                )
-                var odg = mutableListOf<Sacuvaj>()
-                odg.addAll(MainActivity.sacuvajLista)
-                var odg1 = odg.map { t -> t.anketa }
-                if (odg1.contains(anketa)) {
-
-                    MainActivity.sacuvaj = MainActivity.sacuvajLista[odg1.indexOf(anketa)]
-
-                } else {
-
-                    MainActivity.sacuvaj.jelPritisnuto = false
-                    MainActivity.sacuvaj.odovori.clear()
-                    for (i in 1..pitanja.size) {
-                        MainActivity.sacuvaj.odovori.add(mutableListOf())
-                    }
-                    MainActivity.sacuvajLista.add(MainActivity.sacuvaj)
-                }
-                onItemClick()
-            }
-        }*/
-
-
-
-
     }
 
-    private fun onItemClick() {
-        (activity as MainActivity).refreshAnketaFragmentPitanje()
-    }
+
 
     fun onError(){
         println("Nije uspjela")
@@ -153,13 +116,15 @@ class AnketaListAdapter(
     fun clickBait(anketa1: List<Anketa>, trenutniDatum: Date, holder: AnketaViewHolder, position: Int,anketa: Anketa){
         if(!(trenutniDatum<ankete[position].datumPocetak) && anketa1.contains(ankete[position])) {
             holder.itemView.setOnClickListener {
-
                 MainActivity.sacuvaj.anketa = ankete[position]
                 MainActivity.anketa = ankete[position]
-                println("hsadkjhakljhdlasjhdlasj")
                 onItemClick()
             }
         }
+    }
+
+    private fun onItemClick() {
+        (activity as MainActivity).refreshAnketaFragmentPitanje()
     }
 
     fun updateAnketa(novaAnkete: List<Anketa>) {
