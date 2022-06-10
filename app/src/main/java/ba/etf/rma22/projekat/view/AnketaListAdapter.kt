@@ -68,20 +68,33 @@ class AnketaListAdapter(
         var odg1=odg.map{ t-> t.anketa}
 
         if(odg1.indexOf(ankete[position])>-1 && MainActivity.sacuvajLista[odg1.indexOf(ankete[position])].jelPritisnuto && ankete[position]==MainActivity.anketa){
-            holder.anketaDatum.text="Anketa urađena: "+ ispisFormat.format(ankete[position].datumKraj)
+            if(ankete[position].datumKraj==null) {
+                holder.anketaDatum.text =
+                    "Anketa urađena: " + ispisFormat.format(ankete[position].datumKraj)
+            }else{
+                holder.anketaDatum.text="Anketa urađena: "
+            }
             holder.anketaSlika.setImageResource(R.drawable.plava);
             MainActivity.sacuvaj.anketa=ankete[position]
         }
         else if(trenutniDatum<ankete[position].datumPocetak){
-            holder.anketaDatum.text="Vrijeme aktiviranja: "+ ispisFormat.format(ankete[position].datumPocetak)
-            holder.anketaSlika.setImageResource(R.drawable.zuta);
+
+                holder.anketaDatum.text =
+                    "Vrijeme aktiviranja: " + ispisFormat.format(ankete[position].datumPocetak)
+                holder.anketaSlika.setImageResource(R.drawable.zuta)
+
         }
         else if(ankete[position].progres.compareTo(1.0)==0){
             holder.anketaDatum.text="Anketa urađena: "+ ispisFormat.format(ankete[position].datumKraj)
             holder.anketaSlika.setImageResource(R.drawable.plava);
         }
-        else if(trenutniDatum<ankete[position].datumKraj){
-            holder.anketaDatum.text="Vrijeme zatvaranja: "+ ispisFormat.format(ankete[position].datumKraj)
+        else if(ankete[position].datumKraj==null || trenutniDatum<ankete[position].datumKraj ){
+            if(ankete[position].datumKraj!=null) {
+                holder.anketaDatum.text =
+                    "Vrijeme zatvaranja: " + ispisFormat.format(ankete[position].datumKraj)
+            }else{
+                holder.anketaDatum.text="Vrijeme zatvaranja: ";
+            }
             holder.anketaSlika.setImageResource(R.drawable.zelena);
         }
         else{
@@ -89,7 +102,11 @@ class AnketaListAdapter(
             holder.anketaSlika.setImageResource(R.drawable.crvena)
         }
 
-        if(!(trenutniDatum<ankete[position].datumPocetak) && anketaViewModel.getMyAnkete().contains(ankete[position])) {
+        val anketaViewModel : AnketaViewModel = AnketaViewModel()
+
+        anketaViewModel.getMyAnketeV2(onSuccess = ::clickBait, onError = ::onError, trenutniDatum, holder, position, anketa)
+
+        /*if(!(trenutniDatum<ankete[position].datumPocetak) && anketaViewModel.getMyAnkete().contains(ankete[position])) {
             holder.itemView.setOnClickListener {
 
                 MainActivity.sacuvaj.anketa = ankete[position]
@@ -119,7 +136,9 @@ class AnketaListAdapter(
                 }
                 onItemClick()
             }
-        }
+        }*/
+
+
 
 
     }
@@ -128,7 +147,20 @@ class AnketaListAdapter(
         (activity as MainActivity).refreshAnketaFragmentPitanje()
     }
 
+    fun onError(){
+        println("Nije uspjela")
+    }
+    fun clickBait(anketa1: List<Anketa>, trenutniDatum: Date, holder: AnketaViewHolder, position: Int,anketa: Anketa){
+        if(!(trenutniDatum<ankete[position].datumPocetak) && anketa1.contains(ankete[position])) {
+            holder.itemView.setOnClickListener {
 
+                MainActivity.sacuvaj.anketa = ankete[position]
+                MainActivity.anketa = ankete[position]
+                println("hsadkjhakljhdlasjhdlasj")
+                onItemClick()
+            }
+        }
+    }
 
     fun updateAnketa(novaAnkete: List<Anketa>) {
         this.ankete = novaAnkete

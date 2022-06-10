@@ -1,5 +1,6 @@
 package ba.etf.rma22.projekat.view
 
+
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,11 +18,11 @@ import java.util.*
 
 
 class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
-    var pitanje1 = pitanje
     lateinit var listView: ListView
     lateinit var textView: TextView
     lateinit var button: Button
     val trenutniDatum : Date = Calendar.getInstance().run{ time };
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,14 +32,14 @@ class FragmentPitanje(var pitanje: Pitanje) : Fragment() {
         textView=view.findViewById(R.id.tekstPitanja)
         listView=view.findViewById(R.id.odgovoriLista)
         button=view.findViewById(R.id.dugmeZaustavi)
-        textView.setText(pitanje.tekst)
+        textView.setText(pitanje.tekstPitanja)
         val list = pitanje.opcije.toMutableList()
         val adapter = ArrayAdapter<String>(
             view.context,
             android.R.layout.simple_list_item_1,list
         )
         listView.adapter=adapter
-        if(MainActivity.sacuvaj.anketa.progres.compareTo(1.0)!=0 && MainActivity.sacuvaj.anketa.datumKraj>trenutniDatum) {
+        if(MainActivity.sacuvaj.anketa.progres.compareTo(1.0)!=0 && MainActivity.sacuvaj.anketa.datumKraj!=null&&MainActivity.sacuvaj.anketa.datumKraj>trenutniDatum) {
             listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
                 (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
                 var odg = mutableListOf<Sacuvaj>()

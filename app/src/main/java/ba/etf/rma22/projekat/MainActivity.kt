@@ -18,7 +18,7 @@ import java.util.*
 
 class MainActivity : AppCompatActivity(){
     companion object{
-        var anketa : Anketa = Anketa("", "", Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0f)
+        var anketa : Anketa = Anketa(0, "", "",Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0f, "")
         var sacuvaj: Sacuvaj = Sacuvaj(anketa, mutableListOf(), 0, false)
         var sacuvajLista : MutableList<Sacuvaj> = mutableListOf()
         var korisnik : Korisnik = Korisnik(mutableListOf(), mutableListOf(), mutableListOf(),0)
@@ -39,12 +39,6 @@ class MainActivity : AppCompatActivity(){
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewPagerAdapter.vratiIstrazivanje() }, 500)
             }
-            else if(position==viewPagerAdapter.fragments.size-1){
-                if(viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] is FragmentPredaj){
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        (viewPagerAdapter.fragments[viewPagerAdapter.fragments.size-1] as FragmentPredaj).postavi()},500)
-                }
-            }
         }
     }
 
@@ -54,27 +48,27 @@ class MainActivity : AppCompatActivity(){
         viewPager = findViewById(R.id.pager)
         viewPager.adapter = viewPagerAdapter
         viewPager.registerOnPageChangeCallback(doppelgangerPageChangeCallback)
-
-
-
     }
 
 
 
     fun refreshSecondFragmentText() {
-
-            viewPagerAdapter.refreshFragment(
+        viewPagerAdapter.refreshFragment(
                 1,
-                FragmentPoruka.newInstance(stringGru, stringIstra, predaj)
-            )
+            FragmentPoruka.newInstance(stringGru, stringIstra, predaj)
+        )
+        viewPagerAdapter.refreshFragment(
+            0,
+            FragmentAnketa.newInstance()
+        )
 
         viewPager.adapter=viewPagerAdapter
         viewPager.currentItem=1
 
     }
 
-    fun zaPredaj(){
-        viewPagerAdapter.dugmePredaj()
+    fun zaPredaj(t4:String,t2:String,){
+        viewPagerAdapter.dugmePredaj(t4,t2)
         viewPager.adapter=viewPagerAdapter
         viewPager.currentItem=1
     }
@@ -84,9 +78,15 @@ class MainActivity : AppCompatActivity(){
         viewPager.currentItem=0
     }
     fun refreshAnketaFragmentPitanje() {
-        //println("Tadi li ")
          viewPagerAdapter.dajPitanja()
          viewPager.adapter=viewPagerAdapter
+    }
+    fun evo()
+    {
+        println("uoyf;tftyftfttttttttttttttttt")
+        viewPager.adapter=viewPagerAdapter
+        viewPager.currentItem=0
+
     }
 
 }

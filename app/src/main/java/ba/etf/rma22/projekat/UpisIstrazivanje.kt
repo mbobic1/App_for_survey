@@ -29,11 +29,6 @@ class UpisIstrazivanje : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.istrazivanje)
 
-
-            var tacno : Boolean = false
-            var tacno1 : Boolean = false
-            var tacno2 : Boolean = false
-
             spinnerGod=findViewById(R.id.odabirGodina)
             spinnerG=findViewById(R.id.odabirGrupa)
             spinnerI=findViewById(R.id.odabirIstrazivanja)
@@ -52,9 +47,7 @@ class UpisIstrazivanje : AppCompatActivity() {
             spinnerGod.setSelection(korisnik.godinaStudiranja)
             spinnerGod.onItemSelectedListener=object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    tacno=true
-
-                     if(parent!=null){
+                      if(parent!=null){
                          if(position==0){
                              var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
                                  mutableListOf<String>())
@@ -98,7 +91,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                         p2: Int,
                                         p3: Long
                                     ) {
-                                        if (p0 != null) {
+                                       /* if (p0 != null) {
                                             var niz1 = ArrayAdapter(
                                                 parent.context,
                                                 android.R.layout.simple_spinner_item,
@@ -109,7 +102,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                             spinnerG.setAdapter(niz1)
                                             button.isEnabled=true
 
-                                        }
+                                        }*/
                                     }
 
                                     override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -152,7 +145,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                             p2: Int,
                                             p3: Long
                                         ) {
-                                            if (p0 != null) {
+                                            /*if (p0 != null) {
                                                 var niz1 = ArrayAdapter(
                                                     parent.context,
                                                     android.R.layout.simple_spinner_item,
@@ -163,7 +156,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                                 spinnerG.setAdapter(niz1)
                                                 button.isEnabled=true
 
-                                            }
+                                            }*/
                                         }
 
                                         override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -206,13 +199,17 @@ class UpisIstrazivanje : AppCompatActivity() {
                                             p3: Long
                                         ) {
                                             if (p0 != null) {
-                                                var niz1 = ArrayAdapter(
-                                                    parent.context,
-                                                    android.R.layout.simple_spinner_item,
-                                                    grupaViewModel.getGroupsByIstrazivanje(
-                                                        p0.getItemAtPosition(p2) as String
-                                                    ).map { istar -> istar.naziv })
-                                                niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                                var niz1 = grupaViewModel.getGroupsByIstrazivanje(
+                                                    p0.getItemAtPosition(p2) as String
+                                                )?.let {
+                                                    ArrayAdapter(
+                                                        parent.context,
+                                                        android.R.layout.simple_spinner_item,
+                                                        it.map { istar -> istar.naziv })
+                                                }
+                                                with(niz1) {
+                                                    //setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                                }
                                                 spinnerG.setAdapter(niz1)
                                                 button.isEnabled=true
 
@@ -258,7 +255,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                             p2: Int,
                                             p3: Long
                                         ) {
-                                            if (p0 != null) {
+                                           /* if (p0 != null) {
                                                 var niz1 = ArrayAdapter(
                                                     parent.context,
                                                     android.R.layout.simple_spinner_item,
@@ -269,7 +266,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                                 spinnerG.setAdapter(niz1)
                                                 button.isEnabled=true
 
-                                            }
+                                            }*/
                                         }
 
                                         override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -311,7 +308,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                             p2: Int,
                                             p3: Long
                                         ) {
-                                            if (p0 != null) {
+                                           /* if (p0 != null) {
                                                 var niz1 = ArrayAdapter(
                                                     parent.context,
                                                     android.R.layout.simple_spinner_item,
@@ -322,7 +319,7 @@ class UpisIstrazivanje : AppCompatActivity() {
                                                 spinnerG.setAdapter(niz1)
                                                 button.isEnabled=true
 
-                                            }
+                                            }*/
                                         }
 
                                         override fun onNothingSelected(p0: AdapterView<*>?) {

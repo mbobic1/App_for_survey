@@ -34,16 +34,16 @@ class KorisnikRepository {
 
         fun upisiKorisnika(grupa: String, istrazivanje : String ,godina: Int){
             korisnik.godinaStudiranja=godina
-            korisnik.listaIstrazivanje.add( Istrazivanje(istrazivanje,godina))
-            korisnik.listaGrupa.add( Grupa(grupa, istrazivanje))
-            Istrazivanje(istrazivanje,godina)
-            Grupa(grupa, istrazivanje)
-            for( i in anketaViewHModel.getAll()){
+            //korisnik.listaIstrazivanje.add( Istrazivanje(istrazivanje,godina))
+            //korisnik.listaGrupa.add( Grupa(grupa, istrazivanje))
+            //Istrazivanje(istrazivanje,godina)
+            //Grupa(grupa, istrazivanje)
+            /*for( i in anketaViewHModel.getAll()){
                 if(i.nazivIstrazivanja==istrazivanje && i.nazivGrupe==grupa){
                     korisnik.listaAnketa.add(i);
 
                 }
-            }
+            }*/
 
         }
     }

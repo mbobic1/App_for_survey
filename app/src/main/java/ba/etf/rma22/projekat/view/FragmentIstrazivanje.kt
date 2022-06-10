@@ -1,6 +1,8 @@
 package ba.etf.rma22.projekat.view
 
+import android.content.Context
 import android.os.Bundle
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,21 +15,27 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Grupa
+import ba.etf.rma22.projekat.data.models.Istrazivanje
 import ba.etf.rma22.projekat.viewmodel.GrupaViewModel
+import ba.etf.rma22.projekat.viewmodel.IstrazivanjeIGrupaViewModel
 import ba.etf.rma22.projekat.viewmodel.IstrazivanjeViewModel
 import ba.etf.rma22.projekat.viewmodel.KorisnikViewModel
 
 class FragmentIstrazivanje : Fragment() {
     private var odabir: Boolean = false;
+    var fsdjal= mutableListOf<Grupa>()
+    var uzmiIstr1 = mutableListOf<Istrazivanje>()
     private var istrazivanjeViewModel: IstrazivanjeViewModel = IstrazivanjeViewModel()
     private var grupaViewModel: GrupaViewModel = GrupaViewModel()
     private var korisnikViewModel: KorisnikViewModel = KorisnikViewModel()
+    private var istrazivanjeIGrupa : IstrazivanjeIGrupaViewModel = IstrazivanjeIGrupaViewModel()
     private lateinit var spinnerGod : Spinner;
     private lateinit var spinnerG : Spinner;
     private lateinit var spinnerI : Spinner;
     private lateinit var button : Button;
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View?
+    {
         var view= inflater.inflate(R.layout.istrazivanje, container, false)
         var tacno : Boolean = false
         var tacno1 : Boolean = false
@@ -49,324 +57,139 @@ class FragmentIstrazivanje : Fragment() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerGod.setAdapter(adapter);
         spinnerGod.setSelection(MainActivity.korisnik.godinaStudiranja)
-        spinnerGod.onItemSelectedListener=object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                tacno=true
+        spinnerGod.onItemSelectedListener= object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                tacno = true
 
-                if(parent!=null){
-                    if(position==0){
-                        var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
-                            mutableListOf<String>())
+                if (parent != null) {
+                    if (position == 0) {
+                        var arr1 = ArrayAdapter(
+                            parent.context, android.R.layout.simple_spinner_item,
+                            mutableListOf<String>()
+                        )
                         arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        spinnerI.adapter=arr1
-                        var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
+                        spinnerI.adapter = arr1
+                        var arr2 = ArrayAdapter(
+                            parent.context,
+                            android.R.layout.simple_spinner_item,
+                            mutableListOf<String>()
+                        )
                         arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                        spinnerG.adapter=arr2
-                        button.isEnabled=false
+                        spinnerG.adapter = arr2
+                        button.isEnabled = false
 
-                    }
-                    else if(position==1) {
-                        var uzmi =
-                            istrazivanjeViewModel.getIstrazivanjeByGodina(1).toMutableList()
-                        uzmi.removeAll(istrazivanjeViewModel.getUpisani())
+                    } else {
 
-                        if (uzmi.size == 0){
-                            var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
-                                mutableListOf<String>())
-                            arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.adapter=arr1
-                            var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
-                            arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerG.adapter=arr2
-                            button.isEnabled=false
-                        }
-                        else{
-                            var niz = ArrayAdapter(
-                                parent.context,
-                                android.R.layout.simple_spinner_item,
-                                uzmi.map { istar -> istar.naziv }.toMutableList()
-                            )
-                            niz.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.setAdapter(niz)
+                        istrazivanjeIGrupa.getIstrazivanjeByGodina(
+                            position,
+                            onSucces = ::istrazivanjePoGodini,
+                            onError = ::onError,
+                            parent.context
+                        )
+                        spinnerI.onItemSelectedListener =
+                            object : AdapterView.OnItemSelectedListener {
+                                override fun onItemSelected(
+                                    p0: AdapterView<*>?,
+                                    p1: View?,
+                                    p2: Int,
+                                    p3: Long
+                                ) {
+                                    istrazivanjeIGrupa.getGrupeZaIstrazivanjeV2(
+                                        position,
+                                        onSucces = ::grupeOdIstrazivanja,
+                                        onError = ::onError,
+                                        parent.context
+                                    )
 
-                            spinnerI.onItemSelectedListener =
-                                object : AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        p0: AdapterView<*>?,
-                                        p1: View?,
-                                        p2: Int,
-                                        p3: Long
-                                    ) {
-                                        if (p0 != null) {
-                                            var niz1 = ArrayAdapter(
-                                                parent.context,
-                                                android.R.layout.simple_spinner_item,
-                                                grupaViewModel.getGroupsByIstrazivanje(
-                                                    p0.getItemAtPosition(p2) as String
-                                                ).map { istar -> istar.naziv })
-                                            niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                                            spinnerG.setAdapter(niz1)
-                                            button.isEnabled=true
-
-                                        }
-                                    }
-
-                                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                                        TODO("Not yet implemented")
-                                    }
                                 }
-                        }
 
 
-                    }
-                    else if(position==2){
-                        var uzmi =
-                            istrazivanjeViewModel.getIstrazivanjeByGodina(2).toMutableList()
-                        uzmi.removeAll(istrazivanjeViewModel.getUpisani())
-
-                        if (uzmi.size == 0){
-                            var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
-                                mutableListOf<String>())
-                            arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.adapter=arr1
-                            var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
-                            arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerG.adapter=arr2
-                            button.isEnabled=false
-                        }
-                        else{
-                            var niz = ArrayAdapter(
-                                parent.context,
-                                android.R.layout.simple_spinner_item,
-                                uzmi.map { istar -> istar.naziv }.toMutableList()
-                            )
-                            niz.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.setAdapter(niz)
-
-                            spinnerI.onItemSelectedListener =
-                                object : AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        p0: AdapterView<*>?,
-                                        p1: View?,
-                                        p2: Int,
-                                        p3: Long
-                                    ) {
-                                        if (p0 != null) {
-                                            var niz1 = ArrayAdapter(
-                                                parent.context,
-                                                android.R.layout.simple_spinner_item,
-                                                grupaViewModel.getGroupsByIstrazivanje(
-                                                    p0.getItemAtPosition(p2) as String
-                                                ).map { istar -> istar.naziv })
-                                            niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                                            spinnerG.setAdapter(niz1)
-                                            button.isEnabled=true
-
-                                        }
-                                    }
-
-                                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                                        TODO("Not yet implemented")
-                                    }
+                                override fun onNothingSelected(p0: AdapterView<*>?) {
+                                    TODO("Not yet implemented")
                                 }
-                        }
-
-                    }
-                    else if(position==3){
-                        var uzmi =
-                            istrazivanjeViewModel.getIstrazivanjeByGodina(3).toMutableList()
-                        uzmi.removeAll(istrazivanjeViewModel.getUpisani())
-
-                        if (uzmi.size == 0){
-                            var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
-                                mutableListOf<String>())
-                            arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.adapter=arr1
-                            var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
-                            arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerG.adapter=arr2
-                            button.isEnabled=false
-                        }
-                        else{
-                            var niz = ArrayAdapter(
-                                parent.context,
-                                android.R.layout.simple_spinner_item,
-                                uzmi.map { istar -> istar.naziv }.toMutableList()
-                            )
-                            niz.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.setAdapter(niz)
-
-                            spinnerI.onItemSelectedListener =
-                                object : AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        p0: AdapterView<*>?,
-                                        p1: View?,
-                                        p2: Int,
-                                        p3: Long
-                                    ) {
-                                        if (p0 != null) {
-                                            var niz1 = ArrayAdapter(
-                                                parent.context,
-                                                android.R.layout.simple_spinner_item,
-                                                grupaViewModel.getGroupsByIstrazivanje(
-                                                    p0.getItemAtPosition(p2) as String
-                                                ).map { istar -> istar.naziv })
-                                            niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                                            spinnerG.setAdapter(niz1)
-                                            button.isEnabled=true
-
-                                        }
-                                    }
-
-                                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                                        TODO("Not yet implemented")
-                                    }
-                                }
-                        }
-
-                    }
-                    else if(position==4){
-                        var uzmi =
-                            istrazivanjeViewModel.getIstrazivanjeByGodina(4).toMutableList()
-                        uzmi.removeAll(istrazivanjeViewModel.getUpisani())
-
-                        if (uzmi.size == 0){
-                            var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
-                                mutableListOf<String>())
-                            arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.adapter=arr1
-                            var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
-                            arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerG.adapter=arr2
-                            button.isEnabled=false
-                        }
-                        else{
-                            var niz = ArrayAdapter(
-                                parent.context,
-                                android.R.layout.simple_spinner_item,
-                                uzmi.map { istar -> istar.naziv }.toMutableList()
-                            )
-                            niz.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.setAdapter(niz)
-
-                            spinnerI.onItemSelectedListener =
-                                object : AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        p0: AdapterView<*>?,
-                                        p1: View?,
-                                        p2: Int,
-                                        p3: Long
-                                    ) {
-                                        if (p0 != null) {
-                                            var niz1 = ArrayAdapter(
-                                                parent.context,
-                                                android.R.layout.simple_spinner_item,
-                                                grupaViewModel.getGroupsByIstrazivanje(
-                                                    p0.getItemAtPosition(p2) as String
-                                                ).map { istar -> istar.naziv })
-                                            niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                                            spinnerG.setAdapter(niz1)
-                                            button.isEnabled=true
-
-                                        }
-                                    }
-
-                                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                                        TODO("Not yet implemented")
-                                    }
-                                }
-                        }
-
-                    }
-                    else if(position==5){
-                        var uzmi =
-                            istrazivanjeViewModel.getIstrazivanjeByGodina(5).toMutableList()
-                        uzmi.removeAll(istrazivanjeViewModel.getUpisani())
-
-                        if (uzmi.size == 0){
-                            var arr1 = ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,
-                                mutableListOf<String>())
-                            arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.adapter=arr1
-                            var  arr2= ArrayAdapter(parent.context, android.R.layout.simple_spinner_item,mutableListOf<String>())
-                            arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerG.adapter=arr2
-                            button.isEnabled=false
-                        }
-                        else{
-                            var niz = ArrayAdapter(
-                                parent.context,
-                                android.R.layout.simple_spinner_item,
-                                uzmi.map { istar -> istar.naziv }.toMutableList()
-                            )
-                            niz.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                            spinnerI.setAdapter(niz)
-
-                            spinnerI.onItemSelectedListener =
-                                object : AdapterView.OnItemSelectedListener {
-                                    override fun onItemSelected(
-                                        p0: AdapterView<*>?,
-                                        p1: View?,
-                                        p2: Int,
-                                        p3: Long
-                                    ) {
-                                        if (p0 != null) {
-                                            var niz1 = ArrayAdapter(
-                                                parent.context,
-                                                android.R.layout.simple_spinner_item,
-                                                grupaViewModel.getGroupsByIstrazivanje(
-                                                    p0.getItemAtPosition(p2) as String
-                                                ).map { istar -> istar.naziv })
-                                            niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                                            spinnerG.setAdapter(niz1)
-                                            button.isEnabled=true
-
-                                        }
-                                    }
-
-                                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                                        TODO("Not yet implemented")
-                                    }
-                                }
-                        }
-
+                            }
                     }
 
                 }
+
+
             }
 
-            override fun onNothingSelected(parent : AdapterView<*>?) {
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
             }
+
         }
 
-        fun vratiGrupu() : String{
-            return spinnerG.selectedItem.toString()
-        }
-        fun vratiIstrazivanje() : String{
-            return spinnerI.selectedItem.toString()
-        }
         button.setOnClickListener {
-            MainActivity.korisnik.godinaStudiranja= spinnerGod.selectedItem.toString().toInt()
-            MainActivity.stringGru=spinnerG.selectedItem.toString()
-            MainActivity.stringIstra=spinnerI.selectedItem.toString()
-            MainActivity.godina=spinnerGod.selectedItem.toString().toInt()
-
-            korisnikViewModel.upisiKorisnika(
-                spinnerG.selectedItem.toString(),
-                spinnerI.selectedItem.toString(),
-                spinnerGod.selectedItem.toString().toInt()
-            )
+            istrazivanjeIGrupa.upisiUGrupu(fsdjal[spinnerG.selectedItemPosition].id, onSuccess = ::upisiGrupu1,onError =::onError)
+            MainActivity.stringGru=fsdjal[spinnerG.selectedItemPosition].naziv
+            MainActivity.stringIstra=uzmiIstr1[spinnerI.selectedItemPosition].naziv
 
             (activity as MainActivity).refreshSecondFragmentText()
         }
-
         return view;
-    }
+}
     companion object{
         fun newInstance() : FragmentIstrazivanje{
             var novi = FragmentIstrazivanje()
             return novi
         }
+    }
+    fun vratiGrupu(): String {
+        return spinnerG.selectedItem.toString()
+    }
+
+    fun vratiIstrazivanje(): String {
+        return spinnerI.selectedItem.toString()
+    }
+
+    fun upisiGrupu1(){
+
+    }
+
+    fun istrazivanjePoGodini(istraz : List<Istrazivanje>, context : Context){
+        val uzmi = istraz
+        uzmiIstr1 = istraz.toMutableList()
+        if (uzmi.size == 0){
+            var arr1 = ArrayAdapter(context, android.R.layout.simple_spinner_item,
+                mutableListOf<String>())
+            arr1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerI.adapter=arr1
+            var  arr2= ArrayAdapter(context, android.R.layout.simple_spinner_item,mutableListOf<String>())
+            arr2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerG.adapter=arr2
+            button.isEnabled=false
+        }
+        else {
+            var niz = ArrayAdapter(
+                context,
+                android.R.layout.simple_spinner_item,
+                uzmi.map { istar -> istar.naziv }.toMutableList()
+            )
+            niz.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerI.setAdapter(niz)
+        }
+    }
+    fun grupeOdIstrazivanja(grupe1 : List<Grupa>, context: Context){
+        var uzmi = grupe1
+        fsdjal=grupe1.toMutableList()
+        var niz1 = ArrayAdapter(
+            context,
+            android.R.layout.simple_spinner_item, uzmi.map { grupe12 -> grupe12.naziv }.toMutableList())
+        niz1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerG.setAdapter(niz1)
+        button.isEnabled=true
+
+    }
+
+    fun onError(){
+        println("Nije uspjelo")
     }
 
 }

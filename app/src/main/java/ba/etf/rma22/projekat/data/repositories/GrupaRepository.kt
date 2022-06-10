@@ -11,7 +11,8 @@ class GrupaRepository   {
 
         }
        fun getGroupsByIstrazivanje(nazivIstrazivanja:String) : List<Grupa> {
-           return grupe().filter { it.nazivIstrazivanja.equals(nazivIstrazivanja) }
+           return emptyList()
+         //  return grupe().filter { it.nazivIstrazivanja.equals(nazivIstrazivanja) }
        }
 
     }

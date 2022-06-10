@@ -10,11 +10,11 @@ fun datum(godina:Int, mjesec:Int, dan:Int): Date {
 
 fun istrazivanja():List<Istrazivanje>{
     return listOf(
-        Istrazivanje("Održavanje nastave online", 1),
-        Istrazivanje("Važnost kvalitetnog obrazovanja", 2),
-        Istrazivanje("Provođenje slobodnog vremena", 3),
-        Istrazivanje("Preseljenje u druge zemlje", 4),
-        Istrazivanje("Položaj mladih na tržištu rada", 5),
+        Istrazivanje(1,"Održavanje nastave online", 1),
+        Istrazivanje(2,"Važnost kvalitetnog obrazovanja", 2),
+        Istrazivanje(3,"Provođenje slobodnog vremena", 3),
+        Istrazivanje(4,"Preseljenje u druge zemlje", 4),
+        Istrazivanje(5,"Položaj mladih na tržištu rada", 5),
 
     )
 }

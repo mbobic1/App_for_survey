@@ -38,7 +38,7 @@ class FragmentAnketa : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        anketaAdapter.updateAnketa(anketaViewModel.getMyAnkete())
+        anketaViewModel.getMyAnkete(onSuccess = ::update, onError = ::onError)
     }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -47,7 +47,8 @@ class FragmentAnketa : Fragment() {
         listaAnketa.layoutManager = GridLayoutManager(activity, 2)
         anketaAdapter = AnketaListAdapter(arrayListOf(), activity as MainActivity)
         listaAnketa.adapter=anketaAdapter
-        anketaAdapter.updateAnketa(ankete())
+        anketaViewModel.getMyAnkete(onSuccess = ::update, onError = ::onError)
+
 
         var spinner: Spinner;
         var adapter= ArrayAdapter(view.context, android.R.layout.simple_spinner_item,podatci)
@@ -58,19 +59,19 @@ class FragmentAnketa : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if(parent!=null){
                     if(position==0){
-                        anketaAdapter.updateAnketa(anketaViewModel.getMyAnkete())
+                        anketaViewModel.getMyAnkete(onSuccess = ::update, onError = ::onError)
                     }
                     else if(position==1){
-                        anketaAdapter.updateAnketa(anketaViewModel.getAll())
+                        anketaViewModel.getAll(onSuccess = ::update, onError = ::onError)
                     }
                     else if(position==2){
-                        anketaAdapter.updateAnketa(anketaViewModel.getDone())
+                        anketaViewModel.getDone(onSuccess = ::update, onError = ::onError)
                     }
                     else if(position==3){
-                        anketaAdapter.updateAnketa(anketaViewModel.getFuture())
+                        anketaViewModel.getFuture(onSuccess = ::update, onError = ::onError)
                     }
                     else if(position==4){
-                        anketaAdapter.updateAnketa(anketaViewModel.getNotTaken())
+                        anketaViewModel.getProsle(onSuccess = ::update, onError = ::onError)
                     }
                 }
             }
@@ -86,6 +87,12 @@ class FragmentAnketa : Fragment() {
         fun newInstance(): FragmentAnketa = FragmentAnketa()
     }
 
+    fun update(ankete1 : List<Anketa>){
+        anketaAdapter.updateAnketa(ankete1)
+    }
+    fun onError(){
+        println("Nije uspjelo")
+    }
 }
 
 

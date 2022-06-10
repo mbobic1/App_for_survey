@@ -4,12 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import ba.etf.rma22.projekat.MainActivity
+import ba.etf.rma22.projekat.data.models.Pitanje
+import ba.etf.rma22.projekat.data.repositories.IstrazivanjeIGrupaRepository
 import ba.etf.rma22.projekat.data.repositories.PitanjeRepository
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 
 class ViewPagerAdapter(
      activity: AppCompatActivity
 ) : FragmentStateAdapter(activity) {
+    var activity=activity
     private lateinit var pitanjeRepository: PitanjeRepository
     var fragments : MutableList<Fragment> = mutableListOf(FragmentAnketa.newInstance(),FragmentIstrazivanje.newInstance())
     override fun getItemCount(): Int {
@@ -19,7 +22,6 @@ class ViewPagerAdapter(
         return fragments[position]
     }
     fun refreshFragment(index: Int, fragment: Fragment) {
-        println("Usla u adaoter")
         fragments[index] = fragment
         notifyItemChanged(index)
     }
@@ -33,12 +35,12 @@ class ViewPagerAdapter(
 
         }
     }
-    fun dugmePredaj(){
+    fun dugmePredaj(t1 :String, t2:String){
         fragments.clear()
         fragments.add(FragmentAnketa())
-        fragments.add(FragmentPoruka.newInstance(MainActivity.anketa.naziv, MainActivity.anketa.nazivIstrazivanja, MainActivity.predaj))
+        fragments.add(FragmentPoruka.newInstance(t1,t2, 1))
         notifyItemChanged(1)
-        println("snkrs34343434343434=${MainActivity.sacuvaj.anketa.naziv}   =${MainActivity.sacuvajLista.size} =${MainActivity.sacuvajLista[0].anketa.naziv}")
+       // println("snkrs34343434343434=${MainActivity.sacuvaj.anketa.naziv}   =${MainActivity.sacuvajLista.size} =${MainActivity.sacuvajLista[0].anketa.naziv}")
 
     }
     fun dugmeZaustavi(){
@@ -48,16 +50,25 @@ class ViewPagerAdapter(
         notifyDataSetChanged()
     }
     fun dajPitanja(){
-        fragments.clear()
-        var pitanja = PitanjeAnketaViewModel().getPitanja(MainActivity.anketa.naziv, MainActivity.anketa.nazivIstrazivanja)
-        for( i in pitanja){
-            fragments.add(FragmentPitanje(i))
-        }
-        fragments.add(FragmentPredaj())
-        notifyDataSetChanged()
+        PitanjeAnketaViewModel().getPitanja(MainActivity.anketa.id, onSucces = ::oe, onError = ::onError)
+       }
+fun oe(a:List<Pitanje>)
+{
+    println("U dunkcijgvif fvohveghgvvgubyuby")
+    fragments.clear()
+   for( i in a){
+        fragments.add(FragmentPitanje(i))
+
     }
+    fragments.add(FragmentPredaj())
+    notifyDataSetChanged()
+    (activity as MainActivity).evo()
 
+}
+fun onError()
+{
 
+}
 
 
 

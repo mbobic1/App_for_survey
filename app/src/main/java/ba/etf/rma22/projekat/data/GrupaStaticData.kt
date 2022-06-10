@@ -5,22 +5,22 @@ import java.util.*
 
 fun grupe():List<Grupa>{
     return listOf(
-        Grupa("grupa1", istrazivanja()[0].naziv),
-        Grupa("grupa2", istrazivanja()[0].naziv),
-        Grupa("grupa3", istrazivanja()[0].naziv),
+        Grupa(1,"grupa1", 0),
+        Grupa(1,"grupa2", 0),
+        Grupa(1,"grupa3", 0),
 
 
-        Grupa("grupa1", istrazivanja()[1].naziv),
-        Grupa("grupa2", istrazivanja()[1].naziv),
+        Grupa(2,"grupa1", 1),
+        Grupa(2,"grupa2", 1),
 
 
-        Grupa("grupa1", istrazivanja()[2].naziv),
-        Grupa("grupa2", istrazivanja()[2].naziv),
+        Grupa(3,"grupa1", 2),
+        Grupa(3,"grupa2",2),
 
-        Grupa("grupa1", istrazivanja()[3].naziv),
-        Grupa("grupa2", istrazivanja()[3].naziv),
+        Grupa(4,"grupa1", 3),
+        Grupa(4,"grupa2", 3),
 
-        Grupa("grupa1", istrazivanja()[4].naziv),
-        Grupa("grupa2", istrazivanja()[4].naziv)
+        Grupa(5,"grupa1", 4),
+        Grupa(5,"grupa2", 4)
     )
 }

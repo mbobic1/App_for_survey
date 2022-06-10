@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Sacuvaj
+import ba.etf.rma22.projekat.viewmodel.IstrazivanjeIGrupaViewModel
 import kotlin.math.roundToInt
 
 class FragmentPredaj : Fragment() {
@@ -27,27 +28,22 @@ class FragmentPredaj : Fragment() {
 
 
          button.setOnClickListener{ ;
-
-             MainActivity.predaj = 1
-              var odg = mutableListOf<Sacuvaj>()
-              odg.addAll(MainActivity.sacuvajLista)
-              var odg1=odg.map{ t-> t.anketa}
-              MainActivity.sacuvaj.jelPritisnuto=true
-              MainActivity.sacuvajLista[odg1.indexOf(MainActivity.anketa)]=MainActivity.sacuvaj
-              (activity as MainActivity).zaPredaj()
+IstrazivanjeIGrupaViewModel().gon(MainActivity.anketa.id, onSucces = ::moj, onError = ::onError)
           }
           return view
      }
+fun moj(a:String)
+{
+    (activity as MainActivity).zaPredaj(MainActivity.anketa.naziv,a)
+}
+    fun onError()
+    {
 
-     fun postavi() {
-         var pit = MainActivity.sacuvaj.odovori.size
-          var odg = mutableListOf<List<Int>>()
-         odg.addAll(MainActivity.sacuvaj.odovori)
-          odg.removeIf{t -> t.size ==0 }
-          var prog = (kotlin.math.round(((odg.size.toFloat() / pit.toFloat())/0.2))*20).roundToInt()
-         MainActivity.sacuvaj.progres1=prog
-         textView.setText("${MainActivity.sacuvaj.progres1}%")
-         MainActivity.sacuvajLista.add(MainActivity.sacuvaj)
+    }
+     fun postavi(i:Int) {
+
+     textView.setText("${i}%")
+      //   MainActivity.sacuvajLista.add(MainActivity.sacuvaj)
      }
 }
 
