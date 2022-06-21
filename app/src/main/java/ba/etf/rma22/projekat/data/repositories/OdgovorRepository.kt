@@ -1,5 +1,7 @@
 package ba.etf.rma22.projekat.data.repositories
 
+import android.content.Context
+import ba.etf.rma22.projekat.data.dao.AppDatabase
 import ba.etf.rma22.projekat.data.models.Odgovor
 import ba.etf.rma22.projekat.data.models.OdgovorPitanje
 import kotlinx.coroutines.Dispatchers
@@ -7,6 +9,8 @@ import kotlinx.coroutines.withContext
 import java.lang.Exception
 
 object OdgovorRepository {
+    var context : Context?= null;
+
     suspend fun getOdgovoriAnketa(idAnkete:Int):List<Odgovor>{
         return withContext(Dispatchers.IO){
             val anketaP = TakeAnketaRepository.getPoceteAnkete()
@@ -15,7 +19,11 @@ object OdgovorRepository {
                 return@withContext mutableListOf<Odgovor>()
             }
             val ank = anketaP!!.find { it.AnketumId == idAnkete }
-            return@withContext ApiAdapter.retrofit.getOdgovoriAnkete( ank!!.id,AccountRepository.getHash())
+            var yu=ApiAdapter.retrofit.getOdgovoriAnkete( ank!!.id,AccountRepository.getHash())
+            val db = AccountRepository.context?.let { AppDatabase.getInstance(it) }
+            for(l in yu)
+            db!!.odgovorDao().insertOdgovor(l)
+            return@withContext  yu
         }
 
     }
@@ -39,6 +47,7 @@ object OdgovorRepository {
                    idAnketaTaken,
                    OdgovorPitanje(odgovor,idPitanje,vrati)
                )
+               getOdgovoriAnketa(ank!!.AnketumId)
                return@withContext vrati
            }catch (e : Exception){
                return@withContext -1

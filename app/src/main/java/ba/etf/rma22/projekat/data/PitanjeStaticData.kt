@@ -3,7 +3,7 @@ package ba.etf.rma22.projekat.data
 import ba.etf.rma22.projekat.data.models.Pitanje
 
 fun pitanja() : List<Pitanje>{
-    return listOf(
+    /*return listOf(
         Pitanje(1,"pitanje 1", "Sta je ovo", listOf("kuca", "auto", "zgrada")),
         Pitanje(1,"pitanje 1", "kako ovo", listOf("tu", "tamo", "zgrada", "lopta")),
         Pitanje(1,"pitanje 1", "WAS", listOf("kula", "buba", "pas")),
@@ -20,5 +20,6 @@ fun pitanja() : List<Pitanje>{
         Pitanje(5,"pitanje 5", "safgasfwfsaf", listOf("kuca", "plaza", "skola")),
         Pitanje(5,"pitanje 5", "otisao je gdje: ", listOf("kuca", "plaza", "skola"))
 
-    )
+    )*/
+    return emptyList()
 }

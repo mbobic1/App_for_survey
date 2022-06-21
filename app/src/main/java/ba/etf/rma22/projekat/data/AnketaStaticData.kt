@@ -9,7 +9,7 @@ fun datum(godina:Int, mjesec:Int, dan:Int):Date{
 }
 
 fun ankete():List<Anketa>{
-    return listOf(
+    /*return listOf(
        Anketa(1,"Anketa 0", "Održavanje nastave online", datum(2021,4,4), datum(2022,5,28),
             datum(2021,4,4),5,"grupa1",0.2f, "prva"),
        Anketa(1,"Anketa 0", "Održavanje nastave online", datum(2021,4,4), datum(2021,5,14),
@@ -43,5 +43,6 @@ fun ankete():List<Anketa>{
             datum(2022,3,17),5,"grupa1",1f, "peta"),
        Anketa(5,"Anekta 4","Položaj mladih na tržištu rada", datum(2022,3,6), datum(2022,4,15),
             datum(2022,3,17),5,"grupa2",1f, "peta")
-    )
+    )*/
+    return emptyList()
 }

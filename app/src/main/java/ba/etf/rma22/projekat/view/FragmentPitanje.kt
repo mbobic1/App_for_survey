@@ -40,7 +40,7 @@ class FragmentPitanje(var pitanje: Pitanje, var odg1 : Int, anketaTaken1: Anketa
             android.R.layout.simple_list_item_1,list
         )
         listView.adapter=adapter
-        if(MainActivity.anketa.progres.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj<trenutniDatum) && MainActivity.anketa.datumPocetak<=trenutniDatum) {
+        if(MainActivity.anketa.progres!!.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj!!<trenutniDatum) && MainActivity.anketa.datumPocetak!!<=trenutniDatum) {
             listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
 
                 (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))

@@ -63,6 +63,10 @@ interface Api {
     @POST("student/{id}/anketa/{kid}")
     suspend fun zapocniRjesavanjeAnkete( @Path("id") idStudenta : String, @Path("kid") idAnketa : Int) : AnketaTaken
 
+    //ACCOUNT
+    @GET("student/{id}")
+    suspend fun getStudnet(@Path("id") idStudenta : String) : Account
+
     //PITANJE
     @GET("anketa/{id}/pitanja")
     suspend fun getPitanja(@Path("id") idAnketa : Int) : List<Pitanje>

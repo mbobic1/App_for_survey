@@ -1,25 +1,32 @@
 package ba.etf.rma22.projekat
 
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import ba.etf.rma22.projekat.data.models.*
+import ba.etf.rma22.projekat.data.repositories.AccountRepository
+import ba.etf.rma22.projekat.data.repositories.AnketaRepository
+import ba.etf.rma22.projekat.data.repositories.IstrazivanjeIGrupaRepository
 import ba.etf.rma22.projekat.view.*
+import ba.etf.rma22.projekat.viewmodel.AccountViewModel
 import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.*
 import java.util.*
 
 
 class MainActivity : AppCompatActivity(){
     companion object{
         var prog : Int = 0;
-        var anketa : Anketa = Anketa(0, "", "",Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0f, "")
+        var anketa : Anketa = Anketa(0, "", "",Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0, "")
         var sacuvaj: Sacuvaj = Sacuvaj(anketa, mutableListOf(), 0, false)
         var sacuvajLista : MutableList<Sacuvaj> = mutableListOf()
         var korisnik : Korisnik = Korisnik(mutableListOf(), mutableListOf(), mutableListOf(),0)
@@ -29,10 +36,11 @@ class MainActivity : AppCompatActivity(){
         var predaj : Int = 0
 
      }
+    var scope = CoroutineScope(Job() + Dispatchers.IO)
     private lateinit var viewPager : ViewPager2
+    var accViewModel : AccountViewModel = AccountViewModel()
 
-
-     var  viewPagerAdapter= ViewPagerAdapter( this)
+    var  viewPagerAdapter= ViewPagerAdapter( this)
 
     var doppelgangerPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
@@ -46,9 +54,35 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_acc)
+        AccountRepository.context=this;
+        IstrazivanjeIGrupaRepository.context=this
+        AnketaRepository.context=this
+        val data : Uri? = intent?.data
+        if(data!=null){
+            val strExtra = intent.getStringExtra("payload")
+            if(strExtra!=null){
+                accViewModel.postaviHash(strExtra)
+                accViewModel.upisiUBazuPodataka(onSuccess = ::onSuccess, onError = ::onError )
+            }
+            }else{
+                accViewModel.upisiUBazuPodataka(onSuccess = ::onSuccess, onError = ::onError)
+
+            }
         viewPager = findViewById(R.id.pager)
         viewPager.adapter = viewPagerAdapter
         viewPager.registerOnPageChangeCallback(doppelgangerPageChangeCallback)
+    }
+
+    fun onSuccess(jel : Boolean){
+        scope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                Toast.makeText(this@MainActivity, "Upisan u bazu", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    fun onError(){
+        println("Ne radi kako treba")
     }
 
 
@@ -84,7 +118,6 @@ class MainActivity : AppCompatActivity(){
     }
     fun evo()
     {
-        println("uoyf;tftyftfttttttttttttttttt")
         viewPager.adapter=viewPagerAdapter
         viewPager.currentItem=0
 

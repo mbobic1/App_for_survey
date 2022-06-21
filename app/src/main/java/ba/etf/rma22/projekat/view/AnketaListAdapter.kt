@@ -1,24 +1,17 @@
 package ba.etf.rma22.projekat.view
 
-import android.app.PendingIntent.getActivity
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.Anketa
-import ba.etf.rma22.projekat.data.models.Pitanje
 import ba.etf.rma22.projekat.data.models.Sacuvaj
 import ba.etf.rma22.projekat.viewmodel.AnketaViewModel
-import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -41,7 +34,7 @@ class AnketaListAdapter(
         return AnketaViewHolder(itemHolder);
     }
 
-     fun prog( progres: Float): Int{
+     fun prog(progres: Int): Int{
         val povratni : Int=(progres*100).toInt()
          for(i in 100 downTo 0 step 20){
              if(i-povratni<10) {
@@ -61,7 +54,7 @@ class AnketaListAdapter(
         val trenutniDatum : Date=Calendar.getInstance().run{ time };
         var id: Int=0;
         holder.anketaName.text=anketa.naziv;
-        holder.anketaProgress.progress=prog(ankete[position].progres)
+        holder.anketaProgress.progress=prog(ankete[position].progres!!)
         holder.anketaIstrazivanje.text=ankete[position].nazivIstrazivanja;
         var odg = mutableListOf<Sacuvaj>()
         odg.addAll(MainActivity.sacuvajLista)
@@ -84,7 +77,7 @@ class AnketaListAdapter(
                 holder.anketaSlika.setImageResource(R.drawable.zuta)
 
         }
-        else if(ankete[position].progres.compareTo(1.0)==0){
+        else if(ankete[position].progres!!.compareTo(1.0)==0){
             holder.anketaDatum.text="Anketa urađena: "+ ispisFormat.format(ankete[position].datumKraj)
             holder.anketaSlika.setImageResource(R.drawable.plava);
         }

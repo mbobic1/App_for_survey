@@ -8,7 +8,6 @@ import ba.etf.rma22.projekat.data.repositories.ApiAdapter
 import ba.etf.rma22.projekat.view.AnketaListAdapter
 import kotlinx.coroutines.*
 import java.util.*
-import javax.inject.Scope
 
 class AnketaViewModel {
 
@@ -65,7 +64,7 @@ class AnketaViewModel {
     fun getProsle(onSuccess: (ankete: List<Anketa>) -> Unit, onError: () -> kotlin.Unit){
         scope.launch {
             val trenutniDatum : Date = Calendar.getInstance().run{ time };
-            val ankete = AnketaRepository.getMyAnkete().filter { it->it.datumKraj!=null && it.datumKraj< trenutniDatum}
+            val ankete = AnketaRepository.getMyAnkete().filter { it->it.datumKraj!=null && it.datumKraj!!< trenutniDatum}
             withContext(Dispatchers.Main){
                 when(ankete){
                     is List<Anketa> -> onSuccess.invoke(ankete)
