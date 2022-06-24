@@ -1,6 +1,9 @@
 package ba.etf.rma22.projekat
 
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,6 +29,9 @@ import java.util.*
 class MainActivity : AppCompatActivity(){
     companion object{
         var prog : Int = 0;
+        var uzmiPitanjaBroj : Int =0;
+        var brojiOdg : Int = 0
+        var novaAnketa : Anketa = Anketa(0, "", "",Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0, "")
         var anketa : Anketa = Anketa(0, "", "",Date(0 ,0,0), Date(0 ,0,0), Date(0 ,0,0), 0,"", 0, "")
         var sacuvaj: Sacuvaj = Sacuvaj(anketa, mutableListOf(), 0, false)
         var sacuvajLista : MutableList<Sacuvaj> = mutableListOf()
@@ -34,7 +40,7 @@ class MainActivity : AppCompatActivity(){
         var stringIstra : String = ""
         var godina : Int = 0
         var predaj : Int = 0
-
+        var internet = false
      }
     var scope = CoroutineScope(Job() + Dispatchers.IO)
     private lateinit var viewPager : ViewPager2
@@ -42,6 +48,24 @@ class MainActivity : AppCompatActivity(){
 
     var  viewPagerAdapter= ViewPagerAdapter( this)
 
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if (capabilities != null) {
+                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                    return true
+                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
     var doppelgangerPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
             if(position==0){
@@ -54,9 +78,11 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_acc)
+        //isOnline(this)
         AccountRepository.context=this;
         IstrazivanjeIGrupaRepository.context=this
         AnketaRepository.context=this
+        internet=isOnline(this)
         val data : Uri? = intent?.data
         if(data!=null){
             val strExtra = intent.getStringExtra("payload")

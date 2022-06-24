@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.*
 import ba.etf.rma22.projekat.data.models.*
 
-//Movie::class,Cast::class,SimilarMovies::class
+
 @Database(entities = arrayOf(Account::class, Grupa::class, Istrazivanje::class, Anketa::class, Pitanje::class, Odgovor::class), version = 5)
 @TypeConverters(Converter::class)
 abstract class AppDatabase : RoomDatabase() {

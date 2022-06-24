@@ -1,5 +1,6 @@
 package ba.etf.rma22.projekat.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +55,11 @@ class AnketaListAdapter(
         val trenutniDatum : Date=Calendar.getInstance().run{ time };
         var id: Int=0;
         holder.anketaName.text=anketa.naziv;
-        holder.anketaProgress.progress=prog(ankete[position].progres!!)
+        if(ankete[position].progres==null){
+            holder.anketaProgress.progress=0
+        }else {
+            holder.anketaProgress.progress = prog(ankete[position].progres!!)
+        }
         holder.anketaIstrazivanje.text=ankete[position].nazivIstrazivanja;
         var odg = mutableListOf<Sacuvaj>()
         odg.addAll(MainActivity.sacuvajLista)
@@ -77,7 +82,7 @@ class AnketaListAdapter(
                 holder.anketaSlika.setImageResource(R.drawable.zuta)
 
         }
-        else if(ankete[position].progres!!.compareTo(1.0)==0){
+        else if(ankete[position].progres!=null && ankete[position].progres!!.compareTo(1.0)==0){
             holder.anketaDatum.text="Anketa urađena: "+ ispisFormat.format(ankete[position].datumKraj)
             holder.anketaSlika.setImageResource(R.drawable.plava);
         }
@@ -111,6 +116,7 @@ class AnketaListAdapter(
             holder.itemView.setOnClickListener {
                 MainActivity.sacuvaj.anketa = ankete[position]
                 MainActivity.anketa = ankete[position]
+                MainActivity.novaAnketa = ankete[position]
                 onItemClick()
             }
         }

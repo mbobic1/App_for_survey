@@ -3,6 +3,7 @@ package ba.etf.rma22.projekat.view
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,14 +41,14 @@ class FragmentPitanje(var pitanje: Pitanje, var odg1 : Int, anketaTaken1: Anketa
             android.R.layout.simple_list_item_1,list
         )
         listView.adapter=adapter
-        if(MainActivity.anketa.progres!!.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj!!<trenutniDatum) && MainActivity.anketa.datumPocetak!!<=trenutniDatum) {
-            listView.setOnItemClickListener(AdapterView.OnItemClickListener { parent, view, position, id ->
-
-                (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
-                odgovorPitanje.dodajOdg(anketaTaken12,position, pitanje.id, onSucces = ::vrati)
-
-            })
-
+        if(MainActivity.anketa.progres!=null && MainActivity.anketa.progres!!.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj!!<trenutniDatum) && MainActivity.anketa.datumPocetak!!<=trenutniDatum) {
+            listView.onItemClickListener =
+                AdapterView.OnItemClickListener { parent, view, position, id ->
+                    MainActivity.brojiOdg++
+                    val selectedItemText = parent.getItemAtPosition(position)
+                    (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
+                    odgovorPitanje.dodajOdg(anketaTaken12,position, pitanje.id, onSucces = ::vrati)
+                }
             button.setOnClickListener {
                 var odg = mutableListOf<Sacuvaj>()
                 odg.addAll(MainActivity.sacuvajLista)

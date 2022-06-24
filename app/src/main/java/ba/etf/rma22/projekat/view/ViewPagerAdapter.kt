@@ -58,10 +58,19 @@ class ViewPagerAdapter(
     {
         fragments.clear()
         for( i in a){
-            if(odg.map{it->it.PitanjeId}.contains(i.id))
-            fragments.add(FragmentPitanje(i, odg.last { it->it.PitanjeId==i.id }.odgovoreno,anketaTaken))
-            else
-                fragments.add(FragmentPitanje(i, -1,anketaTaken))
+            if(odg.map{it->it.PitanjeId}.contains(i.id)) {
+                fragments.add(
+                    FragmentPitanje(
+                        i,
+                        odg.last { it -> it.PitanjeId == i.id }.odgovoreno,
+                        anketaTaken
+                    )
+                )
+                MainActivity.uzmiPitanjaBroj++;
+            }else {
+                fragments.add(FragmentPitanje(i, -1, anketaTaken))
+                MainActivity.uzmiPitanjaBroj++;
+            }
         }
     fragments.add(FragmentPredaj())
     notifyDataSetChanged()

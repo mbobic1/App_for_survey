@@ -26,7 +26,6 @@ class OdgovorViewModel {
                     break
                 }
             }
-            println("Progres ankete je ${vrati}")
             ApiAdapter.retrofit.dodajOdgovorZaPokusaj(AccountRepository.getHash(),anketaTaken.id, OdgovorPitanje(odgovor1,pit, vrati))        }
     }
 

@@ -2,15 +2,19 @@ package ba.etf.rma22.projekat.data.repositories
 
 import android.content.Context
 import android.util.Log
+import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.MainActivity.Companion.korisnik
 import ba.etf.rma22.projekat.ankete
+import ba.etf.rma22.projekat.data.dao.AnketaDao
 import ba.etf.rma22.projekat.data.dao.AppDatabase
+import ba.etf.rma22.projekat.data.dao.GrupaDao
 import ba.etf.rma22.projekat.data.grupe
 import ba.etf.rma22.projekat.data.models.Anketa
 import ba.etf.rma22.projekat.data.models.Grupa
 import ba.etf.rma22.projekat.data.models.Istrazivanje
 import ba.etf.rma22.projekat.data.models.Korisnik
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.withContext
 import java.util.*
 
@@ -84,10 +88,17 @@ object AnketaRepository {
 
         suspend fun getUpisane():List<Anketa> {
             return withContext(Dispatchers.IO) {
+                var listaAnketa = mutableListOf<Anketa>()
+                if(MainActivity.internet){
                 val grupe = ApiAdapter.retrofit.getGrupeUKojeJeUpisan(AccountRepository.acHash)
-                val listaAnketa = mutableListOf<Anketa>()
                 for (grupa in grupe) {
                     listaAnketa.addAll(ApiAdapter.retrofit.getAnketaZaGrupu(grupa.id))
+                    }
+                }else{
+                    val db = AccountRepository.context?.let { AppDatabase.getInstance(it) }
+                    if (db != null) {
+                        listaAnketa = db.anketaDao().getAllAnkete() as MutableList<Anketa>
+                    }
                 }
                 return@withContext listaAnketa
             }
