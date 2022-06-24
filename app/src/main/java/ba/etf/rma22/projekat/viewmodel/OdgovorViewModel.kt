@@ -29,7 +29,7 @@ class OdgovorViewModel {
             ApiAdapter.retrofit.dodajOdgovorZaPokusaj(AccountRepository.getHash(),anketaTaken.id, OdgovorPitanje(odgovor1,pit, vrati))        }
     }
 
-    fun dobijOdg(id: Int, onSucces: (grupe: List<Odgovor>) -> Unit, onError: () -> Unit) {
+    fun dobijOdg(id: Int, onSucces: (odgovori: List<Odgovor>) -> Unit, onError: () -> Unit) {
         scope.launch {
             var t = ApiAdapter.retrofit.getOdgovoriAnkete(id, AccountRepository.getHash())
             withContext(Dispatchers.Main) {

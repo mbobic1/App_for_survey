@@ -3,7 +3,6 @@ package ba.etf.rma22.projekat.view
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import ba.etf.rma22.projekat.MainActivity
 import ba.etf.rma22.projekat.R
 import ba.etf.rma22.projekat.data.models.*
 import ba.etf.rma22.projekat.viewmodel.OdgovorViewModel
-import ba.etf.rma22.projekat.viewmodel.PitanjeAnketaViewModel
 import java.util.*
 
 
@@ -22,6 +20,7 @@ class FragmentPitanje(var pitanje: Pitanje, var odg1 : Int, anketaTaken1: Anketa
     lateinit var textView: TextView
     var anketaTaken12 = anketaTaken1
     lateinit var button: Button
+    var odg12345 : List<Odgovor> = emptyList()
     var odgovorPitanje : OdgovorViewModel = OdgovorViewModel()
     val trenutniDatum : Date = Calendar.getInstance().run{ time };
 
@@ -41,13 +40,24 @@ class FragmentPitanje(var pitanje: Pitanje, var odg1 : Int, anketaTaken1: Anketa
             android.R.layout.simple_list_item_1,list
         )
         listView.adapter=adapter
-        if(MainActivity.anketa.progres!=null && MainActivity.anketa.progres!!.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj!!<trenutniDatum) && MainActivity.anketa.datumPocetak!!<=trenutniDatum) {
+        if(MainActivity.anketa.progres==null){
+            MainActivity.anketa.progres=0
+        }
+
+        if(MainActivity.anketa.progres!!.compareTo(1.0)!=0 && !(MainActivity.anketa.datumKraj!=null&&MainActivity.anketa.datumKraj!!<trenutniDatum) && MainActivity.anketa.datumPocetak!!<=trenutniDatum) {
             listView.onItemClickListener =
                 AdapterView.OnItemClickListener { parent, view, position, id ->
                     MainActivity.brojiOdg++
                     val selectedItemText = parent.getItemAtPosition(position)
+                    odgovorPitanje.dobijOdg(MainActivity.anketa.id, onSucces = ::onSuccess, onError = ::onError)
+                    for (i2 in odg12345){
+                        if(i2.id != position){
+                            odgovorPitanje.dodajOdg(anketaTaken12,position, pitanje.id, onSucces = ::vrati)
+                        }
+
+                    }
                     (view as TextView).setTextColor(resources.getColor(R.color.pitanjeboja))
-                    odgovorPitanje.dodajOdg(anketaTaken12,position, pitanje.id, onSucces = ::vrati)
+
                 }
             button.setOnClickListener {
                 var odg = mutableListOf<Sacuvaj>()
@@ -63,5 +73,11 @@ class FragmentPitanje(var pitanje: Pitanje, var odg1 : Int, anketaTaken1: Anketa
 
     fun  vrati(progres : Int){
         MainActivity.prog=progres
+    }
+    fun onError(){
+
+    }
+    fun onSuccess(odgovori : List<Odgovor>) {
+        odg12345=odgovori
     }
 }
