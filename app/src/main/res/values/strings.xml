@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">projekat</string>
+    <string-array name="ankete_niz">
+        <item> Sve moje ankete </item>
+        <item> Sve ankete </item>
+        <item> Urađene ankete </item>
+        <item> Buduće ankete </item>
+        <item> Prošle (neurađene) ankete </item>
+    </string-array>
+</resources>
